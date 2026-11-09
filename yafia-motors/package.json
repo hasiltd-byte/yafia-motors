@@ -1,0 +1,7 @@
+{
+  "name": "yafia-motors",
+  "private": true,
+  "type": "module",
+  "engines": { "node": "26.x" },
+  "scripts": { "build": "node build.mjs", "build:production": "node build-production.mjs", "start": "node server.mjs", "check": "node check.mjs", "check:content": "node audit-content.mjs", "check:seo": "node check-seo.mjs", "check:production": "node check-production.mjs" }
+}

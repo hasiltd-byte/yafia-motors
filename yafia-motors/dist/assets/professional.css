@@ -1,0 +1,50 @@
+.professional-copy{min-width:0}
+.knowledge-toc{padding:25px 28px;background:#f7f7f7;border:1px solid #ececec;border-radius:10px;margin-bottom:43px}
+.prose .knowledge-toc h2{font-size:21px;margin:0 0 14px}
+.knowledge-toc ol{margin:0;padding-inline-start:21px;display:grid;gap:7px}
+.knowledge-toc li{font-size:13px;line-height:1.8;color:#59595d;padding-inline-start:4px}
+.knowledge-toc a:hover{color:#d51e30;text-decoration:underline;text-underline-offset:4px}
+.knowledge-block{scroll-margin-top:30px}
+.prose .knowledge-block h2{font-size:28px;line-height:1.5;letter-spacing:-.035em}
+.knowledge-list{list-style:none;padding:0;margin:22px 0 30px;display:grid;gap:15px}
+.knowledge-list li{border-inline-start:2px solid #ed29392b;padding-inline-start:17px;line-height:1.9}
+.knowledge-list strong{font-size:16px;display:block;color:#2b2b2f;margin-bottom:4px}
+.knowledge-list span{font-size:15px;color:#6e6e70;display:block}
+.knowledge-table-wrap{max-width:100%;overflow-x:auto;margin:23px 0 32px;border:1px solid #e4e4e6;border-radius:9px}
+.knowledge-table-wrap:focus-visible{outline:2px solid #ed2939;outline-offset:3px}
+.knowledge-table-wrap table{width:100%;border-collapse:collapse;font-size:13px;line-height:1.9;text-align:start;table-layout:fixed}
+.knowledge-table-wrap th,.knowledge-table-wrap td{padding:16px 17px;vertical-align:top;overflow-wrap:anywhere;border-bottom:1px solid #e6e6e8}
+.knowledge-table-wrap thead th{background:#252628;color:#fff;font-size:12px;font-weight:600}
+.knowledge-table-wrap tbody th{font-weight:600;color:#333;width:24%}
+.knowledge-table-wrap td{color:#68686b}
+.knowledge-table-wrap tr:nth-child(even){background:#fafafa}
+.knowledge-table-wrap tbody tr:last-child>*{border-bottom:0}
+.work-steps{counter-reset:work-step;list-style:none;margin:25px 0 35px;padding:0}
+.work-steps li{counter-increment:work-step;position:relative;padding:0 58px 27px 0;min-height:75px}
+.work-steps li:before{content:counter(work-step,decimal-leading-zero);position:absolute;right:0;top:0;width:36px;height:36px;background:#fff0f1;color:#d31c2d;border-radius:8px;display:grid;place-items:center;font-family:Oswald,Arial,sans-serif;font-size:19px}
+.work-steps li:not(:last-child):after{content:'';position:absolute;right:17px;top:43px;bottom:8px;width:1px;background:#ececee}
+.prose .work-steps h3{font-size:19px;line-height:1.6;margin:0 0 8px;letter-spacing:-.025em}
+.prose .work-steps p{font-size:15px;line-height:2;margin:0}
+.knowledge-faq .faq-list{margin-top:20px}
+.knowledge-links{display:flex;gap:22px;flex-wrap:wrap;margin-top:20px}
+.professional-copy .article-source{padding:25px 28px;margin-top:50px}
+.professional-copy .article-source h2{font-size:20px;margin-bottom:14px}
+.professional-copy .article-source p{font-size:12px;margin-bottom:17px}
+.professional-copy .article-source ul{list-style:none;padding:0;margin:0;display:grid;gap:9px}
+.professional-copy .article-source a{font-size:12px;display:inline-block;line-height:1.8;overflow-wrap:anywhere;color:#b61928;text-decoration:underline;text-underline-offset:3px}
+.mobile-table-label{display:none}
+@media(max-width:860px){.reading-layout:has(.professional-copy){grid-template-columns:minmax(0,1fr) 245px;gap:30px}.knowledge-table-wrap th,.knowledge-table-wrap td{padding:12px 10px}.knowledge-table-wrap table{font-size:12px}.prose .knowledge-block h2{font-size:25px}}
+@media(max-width:600px){.reading-layout:has(.professional-copy){grid-template-columns:minmax(0,1fr);gap:25px}.knowledge-toc{padding:22px 20px;margin-bottom:33px}.knowledge-toc li{font-size:12px}.prose .knowledge-block h2{font-size:25px;line-height:1.5}.knowledge-table-wrap table{min-width:560px}.knowledge-table-wrap{margin-inline:0}.knowledge-list span,.prose .work-steps p{font-size:14px}.knowledge-list strong{font-size:15px}.work-steps li{padding-inline-start:49px;padding-right:49px;padding-bottom:24px}.work-steps li:before{width:32px;height:32px;font-size:17px}.work-steps li:not(:last-child):after{right:15px;top:39px}.prose .work-steps h3{font-size:18px}.professional-copy .article-source{padding:22px 20px}.knowledge-faq .faq-list summary{font-size:14px}html[lang=ar] .prose .knowledge-block h2{font-size:23px;line-height:1.65}html[lang=ar] .prose .work-steps h3{font-size:17px}html[lang=ar] .knowledge-list strong{font-size:14px}html[lang=ar] .knowledge-list span,html[lang=ar] .prose .work-steps p{font-size:13px;line-height:2.05}}
+@media(max-width:600px){
+ .knowledge-table-wrap{border:0;border-radius:0;overflow:visible}
+ .knowledge-table-wrap table{display:block;min-width:0;font-size:13px;position:relative}
+ .knowledge-table-wrap thead{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0,0,0,0);clip-path:inset(50%);white-space:nowrap}
+ .knowledge-table-wrap tbody{display:block}
+ .knowledge-table-wrap tbody tr{display:block;border:1px solid #e6e6e8;border-radius:9px;overflow:hidden;margin-bottom:14px;background:#fff}
+ .knowledge-table-wrap tbody th{display:block;width:100%;padding:13px 16px;background:#f5f5f6;color:#252628;font-size:15px;border:0}
+ .knowledge-table-wrap tbody td{display:block;width:100%;padding:12px 16px;border:0;font-size:13px;line-height:1.95}
+ .knowledge-table-wrap tbody td+td{padding-top:0}
+ .knowledge-table-wrap .mobile-table-label{display:block;font-size:11px;font-weight:700;color:#c91e2d;margin-bottom:4px}
+ html[lang=ar] .knowledge-table-wrap tbody th{font-size:14px}
+ html[lang=ar] .knowledge-table-wrap tbody td{font-size:12px;line-height:2}
+}

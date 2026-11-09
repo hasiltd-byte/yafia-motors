@@ -1,4 +1,4 @@
 @echo off
-cd /d "%~dp0yafia-motors"
+cd /d "%~dp0"
 node launch-local.mjs
 if errorlevel 1 pause
