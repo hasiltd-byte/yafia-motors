@@ -23,7 +23,7 @@ const allRoutes=['','services','about','team','area','articles','contact','priva
 function render(lang,route){
  const t=strings[lang],isAr=lang==='ar',idx=isAr?2:0,other=isAr?'he':'ar';
  const copy=editorial[lang];
- const footerPhotoNote=isAr?'??? ?????? ??????? ???????':'?????? ????? ?????? ??????';
+ const footerPhotoNote=isAr?'صور الكراج والفريق توضيحية':'צילומי המוסך והצוות להמחשה';
  const pageSeo=seo[lang][route];
  if(!pageSeo)throw Error('Missing page metadata: '+lang+'/'+route);
  const preparation=copy.preparation[route.replace(/^services\//,'')];
