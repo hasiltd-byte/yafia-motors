@@ -3,6 +3,7 @@ import type { NextConfig } from 'next';
 const config: NextConfig = {
   trailingSlash: true,
   poweredByHeader: false,
+  agentRules: false,
   turbopack: { root: process.cwd() },
   serverExternalPackages: ['@supabase/supabase-js'],
   experimental: { globalNotFound: true, serverActions: { bodySizeLimit: '4mb' } },

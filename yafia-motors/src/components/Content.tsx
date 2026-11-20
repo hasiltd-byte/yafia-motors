@@ -1,6 +1,8 @@
 import React from 'react';
 import { safeUrl, type ContentNode, type SiteDocument } from '@/lib/model';
 const names: Record<string, string> = {
+  hreflang: 'hrefLang',
+  fetchpriority: 'fetchPriority',
   class: 'className',
   for: 'htmlFor',
   tabindex: 'tabIndex',

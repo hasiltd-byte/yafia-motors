@@ -26,3 +26,6 @@ dist/*
 src/app/.well-known/
 public/.well-known/
 .workflow-data/
+
+.vercel
+.env*
