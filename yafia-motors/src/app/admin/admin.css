@@ -1,3 +1,43 @@
+.cms-menu-manager section {
+  padding: 20px 0;
+  border-top: 1px solid #edf0f2;
+}
+.cms-menu-manager section h2 {
+  font-size: 16px;
+}
+.cms-menu-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.cms-menu-row strong {
+  width: 180px;
+  font-size: 13px;
+}
+.cms-menu-row select {
+  flex: 1;
+  max-width: 500px;
+  font-size: 12px;
+}
+.cms-menu-row button {
+  font-size: 11px;
+  padding: 6px 10px;
+}
+@media (max-width: 800px) {
+  .cms-menu-row {
+    flex-wrap: wrap;
+    padding-bottom: 15px;
+    border-bottom: 1px solid #eee;
+  }
+  .cms-menu-row strong {
+    width: 100%;
+  }
+  .cms-menu-row select {
+    flex-basis: 100%;
+    max-width: none;
+  }
+}
 .cms {
   --cms-red: #ed2939;
   --cms-dark: #202223;

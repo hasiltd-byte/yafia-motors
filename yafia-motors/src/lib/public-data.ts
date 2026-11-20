@@ -4,6 +4,7 @@ import seed from '../../.generated/seed.json';
 import { anonymous, configured, dbCheck } from './supabase';
 import { SITE_ID, type Locale, type SiteDocument } from './model';
 export const seedPages = seed.pages;
+const backendKey = configured() ? process.env.NEXT_PUBLIC_SUPABASE_URL! : 'seed-only';
 export const publicIndex = unstable_cache(
   async () => {
     if (!configured())
@@ -24,7 +25,7 @@ export const publicIndex = unstable_cache(
       description: string;
     }[];
   },
-  ['public-index', SITE_ID],
+  ['public-index', SITE_ID, backendKey],
   { tags: ['site-content'], revalidate: 3600 },
 );
 export const publicDocument = unstable_cache(
@@ -44,6 +45,6 @@ export const publicDocument = unstable_cache(
     dbCheck(error);
     return data as SiteDocument | null;
   },
-  ['public-document', SITE_ID],
+  ['public-document', SITE_ID, backendKey],
   { tags: ['site-content'], revalidate: 3600 },
 );

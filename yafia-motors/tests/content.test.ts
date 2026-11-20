@@ -13,6 +13,7 @@ import {
 import { newDocument, makeBlock } from '../src/lib/blocks';
 import { validMediaHeader } from '../src/lib/media';
 import { adminEndpoint } from '../src/components/admin/api';
+import { navigationDocument } from '../src/lib/navigation';
 import {
   createTranslationClient,
   translationSegments,
@@ -32,6 +33,50 @@ test('Clearing a content field keeps its editor available', () => {
   setField(doc, key, '');
   assert.ok(fields(doc).some((f) => f.key === key));
   assert.equal(fieldValue(doc, key), '');
+});
+test('Shared navigation preserves the current route when switching languages and selects the correct section', () => {
+  const initial = JSON.stringify(seed.shells.he.document);
+  for (const page of seed.pages) {
+    const shell = navigationDocument(
+        seed.shells[page.locale].document,
+        page.route,
+        page.locale,
+        seed.pages,
+      ),
+      links: any[] = [];
+    function walk(nodes: any[]) {
+      for (const n of nodes) {
+        if (n.tag === 'a') links.push(n);
+        walk(n.children || []);
+      }
+    }
+    for (const block of shell.blocks) walk(block.nodes);
+    const other = page.locale === 'he' ? 'ar' : 'he';
+    assert.equal(
+      links.find((n) => n.attrs.class?.includes('language-switch')).attrs.href,
+      `/${other}/${page.route ? page.route + '/' : ''}`,
+    );
+    const active = links.filter((n) => n.attrs.class?.split(/\s+/).includes('active'));
+    const parent = page.route.split('/')[0];
+    if (['', 'about', 'services', 'team', 'articles', 'contact'].includes(parent)) {
+      assert.equal(active.length, 1);
+      assert.equal(active[0].attrs.href, `/${page.locale}/${parent ? parent + '/' : ''}`);
+    } else assert.equal(active.length, 0);
+  }
+  assert.equal(JSON.stringify(seed.shells.he.document), initial);
+  const fallback = navigationDocument(seed.shells.he.document, 'new-page', 'he', [
+    { route: '', locale: 'ar' },
+  ]);
+  let href = '';
+  for (const b of fallback.blocks) {
+    const walk = (nodes: any[]) =>
+      nodes.forEach((n) => {
+        if (n.attrs?.class?.includes('language-switch')) href = n.attrs.href;
+        walk(n.children || []);
+      });
+    walk(b.nodes);
+  }
+  assert.equal(href, '/ar/');
 });
 test('All 36 imported pages and both shared layouts validate without changing their content', () => {
   assert.equal(seed.pages.length, 36);

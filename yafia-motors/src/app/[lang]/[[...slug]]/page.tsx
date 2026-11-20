@@ -6,6 +6,7 @@ import { publicDocument, publicIndex, seedPages } from '@/lib/public-data';
 import { locales, ORIGIN, publicPath, type Locale } from '@/lib/model';
 import { schemaFor } from '@/lib/seo';
 import { collectionDocument } from '@/lib/public-content';
+import { navigationDocument } from '@/lib/navigation';
 type Props = { params: Promise<{ lang: string; slug?: string[] }> };
 async function resolve(params: Props['params']) {
   const p = await params;
@@ -53,7 +54,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function PublicPage({ params }: Props) {
   const { locale, route, doc } = await resolve(params);
   const displayDoc = await collectionDocument(doc, route, locale);
-  const shell = await publicDocument('@shell', locale);
+  const sharedShell = await publicDocument('@shell', locale);
+  const shell = sharedShell
+    ? navigationDocument(sharedShell, route, locale, await publicIndex())
+    : null;
   if (!shell) throw Error('יש לייבא את הגדרות האתר לפני פרסום');
   return (
     <div className={doc.bodyClass || 'inner-page'} lang={locale} dir="rtl">

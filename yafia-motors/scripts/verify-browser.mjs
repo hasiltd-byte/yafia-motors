@@ -165,6 +165,31 @@ assert.equal(
 await visit(harness, 390, 844);
 assert.equal(await evaluate('document.documentElement.scrollWidth>innerWidth'), false);
 await shot('admin-mobile');
+await visit(harness);
+await evaluate(
+  "[...document.querySelectorAll('.cms-sidebar nav button')].find(b=>b.textContent.includes('פרטי האתר')).click()",
+);
+await pause(400);
+await evaluate("document.querySelector('.cms-menu-manager summary').click()");
+assert.equal(
+  await evaluate("document.querySelectorAll('.cms-menu-row').length"),
+  16,
+  'all three menus',
+);
+await evaluate("document.querySelector('.cms-menu-manager section .cms-primary').click()");
+await pause(200);
+assert.equal(
+  await evaluate(
+    "document.querySelectorAll('.cms-menu-manager section')[0].querySelectorAll('.cms-menu-row').length",
+  ),
+  7,
+  'new menu item',
+);
+await evaluate(
+  "[...document.querySelectorAll('.cms-sticky button')].find(b=>b.textContent.includes('שמירת טיוטה')).click()",
+);
+await pause(400);
+await shot('admin-menus');
 await visit(harness + '?role=editor');
 assert.equal(
   await evaluate(

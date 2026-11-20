@@ -14,6 +14,8 @@ import {
 import { newDocument } from '@/lib/blocks';
 import { mediaTypes, validMediaHeader } from '@/lib/media';
 import { runResearch } from '@/workflows/research';
+import seed from '../../../../../.generated/seed.json';
+import { legacyMedia } from '@/lib/legacy-media';
 type Context = { params: Promise<{ path: string[] }> };
 const uuid = (value: unknown) => {
   if (typeof value !== 'string' || !/^[-a-f0-9]{36}$/i.test(value))
@@ -53,7 +55,7 @@ export async function GET(request: NextRequest, context: Context) {
         .order('created_at', { ascending: false })
         .limit(500);
       dbCheck(r.error);
-      data = r.data;
+      data = [...(r.data || []), ...legacyMedia([...seed.pages, ...Object.values(seed.shells)])];
     } else if (path === 'members') {
       await authorize('admin');
       const r = await db.from('cms_memberships').select('user_id,role').eq('site_id', SITE_ID);

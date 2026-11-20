@@ -12,7 +12,10 @@ type Media = {
   alt: { he: string; ar: string };
   credit: string;
   published: boolean;
+  legacy?: boolean;
+  url?: string;
 };
+const mediaUrl = (item: Media) => item.url || `/media/${item.id}/`;
 export default function MediaLibrary({
   onSelect,
 }: {
@@ -111,26 +114,29 @@ export default function MediaLibrary({
           .map((m) => (
             <article key={m.id}>
               {m.mime.startsWith('video') ? (
-                <video src={`/media/${m.id}/`} controls preload="metadata" />
+                <video src={mediaUrl(m)} controls preload="metadata" />
               ) : (
-                <img src={`/media/${m.id}/`} alt={m.alt.he || m.name} />
+                <img src={mediaUrl(m)} alt={m.alt.he || m.name} loading="lazy" decoding="async" />
               )}
               <strong>{m.name}</strong>
               <small>
-                {(m.size / 1024 / 1024).toFixed(1)}MB ·{' '}
-                {m.published ? 'בשימוש באתר' : 'בספרייה הפרטית'}
+                {m.legacy
+                  ? 'מדיה קיימת באתר'
+                  : `${(m.size / 1024 / 1024).toFixed(1)}MB · ${m.published ? 'בשימוש באתר' : 'בספרייה הפרטית'}`}
               </small>
               <div className="cms-row">
-                <button onClick={() => setEditing(structuredClone(m))}>פרטי הקובץ</button>
+                {!m.legacy && (
+                  <button onClick={() => setEditing(structuredClone(m))}>פרטי הקובץ</button>
+                )}
                 {onSelect ? (
                   <button
                     className="cms-primary"
-                    onClick={() => onSelect(`/media/${m.id}/`, m.alt, m.mime)}
+                    onClick={() => onSelect(mediaUrl(m), m.alt, m.mime)}
                   >
                     בחירה
                   </button>
                 ) : (
-                  <button onClick={() => navigator.clipboard.writeText(`/media/${m.id}/`)}>
+                  <button onClick={() => navigator.clipboard.writeText(mediaUrl(m))}>
                     העתקת כתובת
                   </button>
                 )}

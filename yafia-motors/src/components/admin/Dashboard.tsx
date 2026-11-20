@@ -197,6 +197,7 @@ export default function Dashboard({
               key={selected}
               initial={pages.filter((p) => p.route === selected)}
               role={identity.role}
+              availablePages={pages.filter((p) => p.locale === 'he' && p.route !== '@shell')}
               onDirty={setEditorDirty}
               onSaved={loadPages}
               notify={notify}

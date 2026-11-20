@@ -19,6 +19,15 @@ import {
   type ContentNode,
 } from '@/lib/model';
 import { makeBlock, blockTypes } from '@/lib/blocks';
+import {
+  menuGroups,
+  menuItems,
+  menuLabel,
+  moveMenuItem,
+  removeMenuItem,
+  addMenuItem,
+  setMenuTarget,
+} from '@/lib/menus';
 type Revision = {
   id: string;
   version: number;
@@ -31,12 +40,14 @@ export default function Editor({
   onSaved,
   notify,
   onDirty,
+  availablePages,
 }: {
   initial: PageRecord[];
   role: string;
   onSaved: () => Promise<void>;
   notify: (m: string) => void;
   onDirty: (value: boolean) => void;
+  availablePages: PageRecord[];
 }) {
   const [pages, setPages] = useState(initial),
     [docs, setDocs] = useState<Record<Locale, SiteDocument>>(
@@ -205,7 +216,11 @@ export default function Editor({
   }
   const block = doc.blocks.find((b) => b.id === blockId);
   const editable = fields(doc).filter(
-    (f) => f.key.startsWith(blockId + ':') && (!search || f.value.includes(search)),
+    (f) =>
+      f.key.startsWith(blockId + ':') &&
+      (!search ||
+        f.value.includes(search) ||
+        fieldValue(docs[locale === 'he' ? 'ar' : 'he'], f.key)?.includes(search)),
   );
   const controls: { key: string; node: ContentNode }[] = [];
   if (block)
@@ -283,27 +298,139 @@ export default function Editor({
               : 'טקסט לתרגום נשלח ל־MyMemory. יש לבדוק תרגום לפני פרסום.'}
           </small>
         </div>
-        <details className="cms-panel">
-          <summary>כותרות ומידע לקידום אורגני</summary>
-          {pairField('seo.title', 'כותרת SEO', 'title')}
-          {pairField('seo.description', 'תיאור בתוצאות החיפוש', 'description')}
-          {pairField('seo.ogAlt', 'תיאור תמונת שיתוף', 'ogAlt')}
-          <label>
-            תמונת שיתוף
-            <input
-              dir="ltr"
-              value={doc.ogImage}
-              onChange={(e) =>
-                edit((n) => {
-                  n[locale].ogImage = e.target.value;
-                })
-              }
-            />
-          </label>
-          <button onClick={() => setMediaTarget({ key: 'seo', attr: 'ogImage' })} type="button">
-            בחירה מספריית המדיה
-          </button>
-        </details>
+        {doc.kind === 'page' && (
+          <details className="cms-panel">
+            <summary>כותרות ומידע לקידום אורגני</summary>
+            {pairField('seo.title', 'כותרת SEO', 'title')}
+            {pairField('seo.description', 'תיאור בתוצאות החיפוש', 'description')}
+            {pairField('seo.ogAlt', 'תיאור תמונת שיתוף', 'ogAlt')}
+            <label>
+              תמונת שיתוף
+              <input
+                dir="ltr"
+                value={doc.ogImage}
+                onChange={(e) =>
+                  edit((n) => {
+                    n[locale].ogImage = e.target.value;
+                  })
+                }
+              />
+            </label>
+            <button onClick={() => setMediaTarget({ key: 'seo', attr: 'ogImage' })} type="button">
+              בחירה מספריית המדיה
+            </button>
+          </details>
+        )}
+        {doc.kind === 'shell' && (
+          <details className="cms-panel cms-menu-manager">
+            <summary>ניהול התפריטים בשתי השפות</summary>
+            <p>
+              הוסיפו קישורים לדפים וסדרו את הפריטים. השינוי בסדר מתעדכן בשתי השפות; כותרות הקישורים
+              ניתנות לעריכה באזור התוכן המתאים.
+            </p>
+            {menuGroups(doc).map((group) => (
+              <section key={group.id}>
+                <div className="cms-toolbar">
+                  <h2>{group.label}</h2>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setBlockId(group.blockId);
+                      setSearch('');
+                    }}
+                  >
+                    עריכת כותרות הקישורים
+                  </button>
+                </div>
+                {menuItems(group).map((item, index) => {
+                  const target =
+                    availablePages.find((p) => item.attrs?.href === publicPath(locale, p.route))
+                      ?.route ?? '__custom';
+                  return (
+                    <div className="cms-menu-row" key={index}>
+                      <strong>{menuLabel(item)}</strong>
+                      <select
+                        aria-label={'קישור עבור ' + menuLabel(item)}
+                        value={target}
+                        onChange={(e) => {
+                          const route = e.target.value;
+                          edit((next) => {
+                            for (const l of ['he', 'ar'] as const)
+                              setMenuTarget(next[l], group.id, index, publicPath(l, route));
+                          });
+                        }}
+                      >
+                        <option value="__custom" disabled>
+                          כתובת מותאמת אישית
+                        </option>
+                        {availablePages.map((p) => (
+                          <option key={p.route} value={p.route}>
+                            {p.route ? p.draft.title : 'דף הבית'}
+                            {p.published_revision ? '' : ' · טיוטה'}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="cms-row">
+                        <button
+                          type="button"
+                          aria-label="הזזת פריט למעלה"
+                          disabled={index === 0}
+                          onClick={() =>
+                            edit((next) => {
+                              for (const l of ['he', 'ar'] as const)
+                                moveMenuItem(next[l], group.id, index, -1);
+                            })
+                          }
+                        >
+                          ↑
+                        </button>
+                        <button
+                          type="button"
+                          aria-label="הזזת פריט למטה"
+                          disabled={index === menuItems(group).length - 1}
+                          onClick={() =>
+                            edit((next) => {
+                              for (const l of ['he', 'ar'] as const)
+                                moveMenuItem(next[l], group.id, index, 1);
+                            })
+                          }
+                        >
+                          ↓
+                        </button>
+                        <button
+                          type="button"
+                          disabled={menuItems(group).length <= 1}
+                          onClick={() => {
+                            if (confirm('להסיר את הקישור מהתפריט בשתי השפות?'))
+                              edit((next) => {
+                                for (const l of ['he', 'ar'] as const)
+                                  removeMenuItem(next[l], group.id, index);
+                              });
+                          }}
+                        >
+                          הסרה
+                        </button>
+                      </div>
+                    </div>
+                  );
+                })}
+                <button
+                  className="cms-primary"
+                  type="button"
+                  onClick={() => {
+                    edit((next) => {
+                      for (const l of ['he', 'ar'] as const) addMenuItem(next[l], group.id, l);
+                    });
+                    setBlockId(group.blockId);
+                    setSearch('קישור חדש');
+                  }}
+                >
+                  ＋ הוספת קישור
+                </button>
+              </section>
+            ))}
+          </details>
+        )}
         <div className="cms-editor-layout">
           <aside className="cms-block-list">
             <h2>אזורי הדף</h2>

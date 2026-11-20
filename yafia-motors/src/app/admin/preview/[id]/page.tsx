@@ -1,7 +1,8 @@
 import { notFound, redirect } from 'next/navigation';
 import { authorize, dbCheck } from '@/lib/supabase';
 import { SITE_ID, type SiteDocument, type Locale } from '@/lib/model';
-import { publicDocument } from '@/lib/public-data';
+import { publicDocument, publicIndex } from '@/lib/public-data';
+import { navigationDocument } from '@/lib/navigation';
 import { Blocks } from '@/components/Content';
 import PublicInteractions from '@/components/PublicInteractions';
 export default async function Preview({
@@ -39,9 +40,15 @@ export default async function Preview({
     if (!r.data) notFound();
     document = r.data.document;
   }
-  const shell =
+  const shared =
     document.kind === 'shell' ? document : await publicDocument('@shell', page.locale as Locale);
-  if (!shell) notFound();
+  if (!shared) notFound();
+  const shell = navigationDocument(
+    shared,
+    document.kind === 'shell' ? '' : page.route,
+    page.locale,
+    await publicIndex(),
+  );
   return (
     <>
       <div className="cms-preview-bar">

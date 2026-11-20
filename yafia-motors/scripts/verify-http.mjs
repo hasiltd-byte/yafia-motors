@@ -8,11 +8,18 @@ const descendants = (n, test) => [
   ...(n.childNodes || []).flatMap((c) => descendants(c, test)),
 ];
 const attr = (n, key) => n?.attrs?.find((a) => a.name === key)?.value;
-const normalize=value=>value.replace(/\s+/g,' ').trim();
-const rawText=n=>n?.nodeName==='#text'?n.value:(n?.childNodes||[]).filter(c=>!['script','style'].includes(c.tagName)).map(rawText).join('');
-const text=n=>normalize(rawText(n));
-const rawExpected=nodes=>nodes.map(n=>n.text!==undefined?n.text:rawExpected(n.children||[])).join('');
-const expectedText=nodes=>normalize(rawExpected(nodes));
+const normalize = (value) => value.replace(/\s+/g, ' ').trim();
+const rawText = (n) =>
+  n?.nodeName === '#text'
+    ? n.value
+    : (n?.childNodes || [])
+        .filter((c) => !['script', 'style'].includes(c.tagName))
+        .map(rawText)
+        .join('');
+const text = (n) => normalize(rawText(n));
+const rawExpected = (nodes) =>
+  nodes.map((n) => (n.text !== undefined ? n.text : rawExpected(n.children || []))).join('');
+const expectedText = (nodes) => normalize(rawExpected(nodes));
 const results = [];
 for (const p of seed.pages) {
   const route = `/${p.locale}/${p.route ? p.route + '/' : ''}`,
@@ -55,6 +62,38 @@ for (const p of seed.pages) {
     descendants(ast, (n) => n.tagName === 'link' && attr(n, 'hreflang')).length,
     3,
     route + ' alternate languages',
+  );
+  const switcher = descendants(
+    ast,
+    (n) => n.tagName === 'a' && attr(n, 'class')?.split(/\s+/).includes('language-switch'),
+  )[0];
+  const other = p.locale === 'he' ? 'ar' : 'he';
+  assert.equal(
+    attr(switcher, 'href'),
+    `/${other}/${p.route ? p.route + '/' : ''}`,
+    route + ' language switch',
+  );
+  const header = descendants(ast, (n) => n.tagName === 'header')[0];
+  assert.equal(
+    Boolean(attr(header, 'class')?.includes('interior-header')),
+    Boolean(p.route),
+    route + ' header variant',
+  );
+  const expectedImages = [];
+  function collectImages(nodes) {
+    for (const n of nodes) {
+      if (n.tag === 'img') expectedImages.push({ src: n.attrs.src, alt: n.attrs.alt });
+      collectImages(n.children || []);
+    }
+  }
+  collectImages(p.document.blocks.flatMap((b) => b.nodes));
+  assert.deepEqual(
+    descendants(main, (n) => n.tagName === 'img').map((n) => ({
+      src: attr(n, 'src'),
+      alt: attr(n, 'alt'),
+    })),
+    expectedImages,
+    route + ' original image selection and alt text',
   );
   for (const img of descendants(main, (n) => n.tagName === 'img')) {
     assert.ok(
