@@ -1,11 +1,9 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "framework": null,
+  "framework": "nextjs",
   "buildCommand": "npm run build",
-  "installCommand": "",
-  "outputDirectory": "dist",
+  "installCommand": "npm ci",
+  "outputDirectory": ".next",
   "trailingSlash": true,
-  "redirects": [
-    { "source": "/", "destination": "/he/", "permanent": true }
-  ]
+  "regions": ["fra1"]
 }

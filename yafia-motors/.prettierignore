@@ -1,0 +1,11 @@
+.next/
+.generated/
+.deploy-cache/
+.production-check/
+dist/
+public/assets/
+src/app/.well-known/
+public/.well-known/
+src/shared/i18n/
+qa/
+backups/

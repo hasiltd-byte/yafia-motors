@@ -1,4 +1,10 @@
 node_modules/
+.next/
+.generated/
+public/assets/
+backups/
+next-env.d.ts
+tsconfig.tsbuildinfo
 .sites-runtime/
 *.tar.gz
 .browser/
@@ -16,3 +22,7 @@ qa/
 # Keep source assets, but regenerate page HTML for each deployment origin.
 dist/*
 !dist/assets/
+/.swc
+src/app/.well-known/
+public/.well-known/
+.workflow-data/

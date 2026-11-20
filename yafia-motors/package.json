@@ -2,6 +2,46 @@
   "name": "yafia-motors",
   "private": true,
   "type": "module",
-  "engines": { "node": "26.x" },
-  "scripts": { "build": "node build.mjs", "build:production": "node build-production.mjs", "start": "node server.mjs", "check": "node check.mjs", "check:content": "node audit-content.mjs", "check:seo": "node check-seo.mjs", "check:production": "node check-production.mjs" }
+  "engines": {
+    "node": "26.x"
+  },
+  "scripts": {
+    "dev": "node scripts/prepare.mjs && next dev --hostname 127.0.0.1 --port 4173",
+    "build": "node scripts/prepare.mjs && next build",
+    "build:production": "npm run build",
+    "start": "next start --hostname 127.0.0.1 --port 4173",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test tests/*.test.ts",
+    "check": "npm run typecheck && npm test",
+    "check:legacy": "node build.mjs && node check.mjs && node audit-content.mjs && node check-seo.mjs",
+    "cms:import": "node --env-file=.env.local scripts/import-cms.mjs",
+    "cms:owner": "node --env-file=.env.local scripts/create-owner.mjs",
+    "cms:backup": "node --env-file=.env.local scripts/backup.mjs",
+    "cms:restore": "node --env-file=.env.local scripts/restore.mjs",
+    "verify:http": "node scripts/verify-http.mjs",
+    "verify:browser": "node scripts/verify-browser.mjs",
+    "qa:admin": "node scripts/browser-harness.mjs",
+    "format": "prettier --write src scripts tests"
+  },
+  "dependencies": {
+    "@supabase/ssr": "0.12.7",
+    "@supabase/supabase-js": "2.119.2",
+    "next": "16.4.6",
+    "parse5": "8.1.1",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "tus-js-client": "4.3.1",
+    "workflow": "5.7.0",
+    "zod": "4.6.7"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.17",
+    "@types/node": "26.6.6",
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "esbuild": "0.28.2",
+    "prettier": "3.10.1",
+    "tsx": "4.23.15",
+    "typescript": "7.0.2"
+  }
 }

@@ -6,6 +6,16 @@
 .sites-runtime
 .vercel
 node_modules
+.next
+.generated
+public/assets
+backups
+tests
+scripts/browser-harness.mjs
+scripts/verify-browser.mjs
+scripts/verify-http.mjs
+next-env.d.ts
+tsconfig.tsbuildinfo
 qa
 .env
 .env.*

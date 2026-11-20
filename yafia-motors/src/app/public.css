@@ -1,0 +1,73 @@
+.cms-section p {
+  white-space: pre-line;
+}
+.cms-section video {
+  width: 100%;
+  max-width: 100%;
+  border-radius: 14px;
+}
+.cms-section img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+.cms-section table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.cms-section th,
+.cms-section td {
+  padding: 16px;
+  border: 1px solid #e7e7e7;
+  text-align: start;
+}
+.cms-section figure {
+  margin: 0;
+}
+.cms-section figcaption {
+  margin-top: 12px;
+  color: #777;
+}
+.cms-section .gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+.cms-section .gallery-grid img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+.cms-section details {
+  border-bottom: 1px solid #ddd;
+  padding: 20px 0;
+}
+.cms-section details summary {
+  font-weight: 700;
+  cursor: pointer;
+}
+.cms-preview-bar {
+  font-family: Heebo, sans-serif;
+  background: #202223;
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 25px;
+  font-size: 13px;
+}
+.cms-preview-bar a {
+  color: white;
+}
+@media (max-width: 600px) {
+  .cms-section .gallery-grid {
+    grid-template-columns: 1fr;
+  }
+  .cms-section table {
+    font-size: 13px;
+  }
+  .cms-section th,
+  .cms-section td {
+    padding: 8px;
+  }
+}
